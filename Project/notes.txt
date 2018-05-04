@@ -1,0 +1,26 @@
+email: 	address  - advanced_database@outlook.com
+		password - database6306
+		
+site link: cst6306.scienceontheweb.net
+
+ftp: 	user - 2674615_edit
+		pass - q#I7c7GfyE
+		host - cst6306.scienceontheweb.net
+
+phpmyadmin: link 	- https://supportindeed.com/phpMyAdmin4/index.php
+			user	- 2674615_cst6306
+			pass 	- q#I7c7GfyE
+			db name - 2674615_cst6306
+
+Integrity Constraints:
+	- Users username must be unique
+Avatars:
+	-Adorable Avatars(http://avatars.adorable.io)
+
+Examples:
+Students:
+	- 940300033
+	- 1 Project (Active) with students that are inactive
+Faculty:
+	- 900468818
+	- 3 Projects (1 co supervisor)
