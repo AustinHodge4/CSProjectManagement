@@ -31,7 +31,7 @@ if (mysqli_num_rows($result) > 0) {
 $userProfileID = $_REQUEST['user_profile_id'];
 $userStudentProfile = $_REQUEST['user_student_profile'];
 
-if ($userStudentProfile) {
+if ($userStudentProfile == "true") {
     $sql = "SELECT * FROM Student WHERE sid = '$userProfileID'";
 } else {
     $sql = "SELECT * FROM Faculty WHERE fid = '$userProfileID'";
@@ -43,6 +43,25 @@ if (mysqli_num_rows($result) > 0) {
     $userProfile = $row;
   }
   debug_to_console($userProfile);
+}
+
+// Get all the projects tuples for student or faculty
+if ($userStudentProfile == "true"){
+  $sql = "CALL user_projects('$userProfileID', 'student')";
+} else {
+  $sql = "CALL user_projects('$userProfileID', 'faculty')";
+}
+
+$result = mysqli_query($link, $sql);
+if (mysqli_num_rows($result) > 0) {
+  // output data of each row
+  while($row = mysqli_fetch_assoc($result)) {
+    $projects[] = $row;
+  }
+  debug_to_console($projects);
+  // Have to call next result when calling multiple stored procedures one after the other
+  $result->free();
+  $link->next_result();
 }
 
 mysqli_close($link);
@@ -69,18 +88,64 @@ mysqli_close($link);
         </div>
      </div>
     <div class="row">
-        <div class="col s12 m8 offset-m2">
+        <div class="col s12 m4 offset-m4">
             <div class="card">
                 <div class="card-content">
-                   <div class="row">
-                    <div class="col s6">
+                <?php if($userStudentProfile == "true"): ?>
+                  <div class="row valign-wrapper">
+                    <div class="col s4">
+                      <img src="https://api.adorable.io/avatars/285/<?php echo $userProfile['sid']; ?>.png" alt="" class="circle responsive-img">
                     </div>
-                    <div class="col s6">
+                    <div class="col s8">
+                      <h4><?php echo $userProfile['sname']; ?></h4>
+                      <span class="black-text">
+                        <?php echo $userProfile['level']; ?>, <?php echo $userProfile['major']; ?> Major<br />
+                        <?php echo $userProfile['byear']; ?>
+                      </span>
                     </div>
-                   </div>
+                  </div>
+                  <div class="divider"></div>
+                  <div class="row">
+                    <div class="col s12">
+                      <h5><i class="material-icons left">web</i>Projects</h5>
+                      <blockquote>
+                      <?php for($i = 0; $i < count($projects); $i++): $project = $projects[$i]; ?>
+                        <div class="chip">
+                          <?php echo $project['pname']; ?>
+                        </div>
+                      <?php endfor; ?>
+                      </blockquote>
+                    </div>
+                  </div>
+                <?php else: ?>
+                  <div class="row valign-wrapper">
+                    <div class="col s4">
+                      <img src="https://api.adorable.io/avatars/285/<?php echo $userProfile['fid']; ?>.png" alt="" class="circle responsive-img">
+                    </div>
+                    <div class="col s8">
+                      <h4><?php echo $userProfile['fname']; ?></h4>
+                      <span class="black-text">
+                        <?php echo $userProfile['department']; ?>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="divider"></div>
+                  <div class="row">
+                    <div class="col s12">
+                      <h5><i class="material-icons left">web</i>Projects Supervised</h5>
+                      <blockquote>
+                      <?php for($i = 0; $i < count($projects); $i++): $project = $projects[$i]; ?>
+                        <div class="chip">
+                          <?php echo $project['pname']; ?>
+                        </div>
+                      <?php endfor; ?>
+                      </blockquote>
+                    </div>
+                  </div>
+                <?php endif; ?>
                 </div>
                 <div class="card-action right-align">
-                  <a class="waves-effect waves-light btn" href="projects.php"><i class="material-icons left">arrow_back</i>Back</a>
+                  <a class="waves-effect waves-light btn" href="projects.php"><i class="material-icons left">arrow_back</i>Back to Projects</a>
                 </div>
             </div>      
         </div>
