@@ -11,6 +11,7 @@ if(isset($_SESSION['username'])) {
   debug_to_console($isStudent);
 }
 else {
+  mysqli_close($link);
   header("Location: login.php");
 }
 // Get current logged in user tuple
@@ -38,13 +39,15 @@ if (isset($_REQUEST['studentID'])){
   $studentID = $_REQUEST['studentID'];
   $studentStartDate = date("Y-m-d", strtotime($_REQUEST['studentStartDate']));
   $studentEndDate = date("Y-m-d", strtotime($_REQUEST['studentEndDate']));
+  debug_to_console($studentStartDate, "Student Start Date");
+  debug_to_console($studentEndDate, "Student End Date");
 
   // Check to see if this is a valid student
   $sql = "SELECT * FROM Student WHERE sid = '$studentID'";
   $result = mysqli_query($link, $sql);
   if (mysqli_num_rows($result) <= 0) {
     $toastMessage = "Student ID is does not exist!";
-  } else if (mysqli_query($link, "INSERT into Assigned (sid, pid, sdate, edate) VALUES ('$studentID', '$pid', $studentStartDate, $studentEndDate)")) {
+  } else if (mysqli_query($link, "INSERT into Assigned (sid, pid, sdate, edate) VALUES ('$studentID', '$pid', '$studentStartDate', '$studentEndDate')")) {
     $toastMessage = "Student successfully added!";
   } else  {
     $toastMessage = "Unable to insert into table :(";
@@ -57,12 +60,10 @@ $result = mysqli_query($link, $sql);
 if (mysqli_num_rows($result) > 0) {
   // output data of each row
   while($row = mysqli_fetch_assoc($result)) {
-      debug_to_console($row);
+      debug_to_console($row, "Project");
       $projectTuple = $row;
   }
 }
-
-
 
 // Get the faculty/supervisor
 $pinv = $projectTuple['pinv'];
@@ -73,7 +74,7 @@ if (mysqli_num_rows($result) > 0) {
   while($row = mysqli_fetch_assoc($result)) {
       $faculty = $row;
   }
-  debug_to_console($faculty);
+  debug_to_console($faculty, "Faculty");
 }
 
 //Get the co-supervisor
@@ -86,9 +87,8 @@ if (mysqli_num_rows($result) > 0) {
   while($row = mysqli_fetch_assoc($result)) {
       $coFaculty = $row;
   }
-  debug_to_console($coFaculty);
+  debug_to_console($coFaculty, "Co-Faculty");
 }
-
 // Get all the students who are currently active on the project
 $students = NULL;
 $sql = "CALL users_on_project('$pid', 'active')";
@@ -99,24 +99,25 @@ if (mysqli_num_rows($result) > 0) {
       $students[] = $row;
   }
   debug_to_console($students);
-  // Have to call next result when calling multiple stored procedures one after the other
-  $result->free();
-  $link->next_result();
 }
+// Have to call next result when calling multiple stored procedures one after the other
+$result->free();
+$link->next_result();
+
 // Get all the students who are not currently active on the project
 $pastStudents = NULL;
 $sql = "CALL users_on_project('$pid', 'inactive')";
 $result = mysqli_query($link, $sql);
-debug_to_console($result);
 if (mysqli_num_rows($result) > 0) {
   // output data of each row
   while($row = mysqli_fetch_assoc($result)) {
       $pastStudents[] = $row;
   }
-  debug_to_console($pastStudents);
-  $result->free();
-  $link->next_result();
+  debug_to_console($pastStudents, "Inactive Student");
+
 }
+$result->free();
+$link->next_result();
 
 mysqli_close($link);
 ?> 
@@ -264,6 +265,7 @@ mysqli_close($link);
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="js/materialize.js"></script>
   <script src="js/init.js"></script>
+  <script src="js/moment.js"></script>
   <script>
   function Validate(form){
     // This checks the validation of the studentID input field
@@ -286,20 +288,40 @@ mysqli_close($link);
   }
   </script>
   <script>
+  // Get the start and end dates as javascript dates of the project
+  var jsDateStart = new Date(<?php echo str_replace("-", ",", $projectTuple['sdate']); ?>);
+  var jsDateEnd = new Date(<?php echo str_replace("-", ",", $projectTuple['edate']); ?>);
+
+  // Initialize the datepickers
   var startDateElem = document.getElementById('student_sdate');
-  var startDateInstance = M.Datepicker.init(startDateElem, {"minDate": new Date("<?php echo $projectTuple['sdate']; ?>"),
-                                          "maxDate": new Date("<?php echo $projectTuple['edate']; ?>"),
-                                          "defaultDate": new Date("<?php echo $projectTuple['sdate']; ?>"),
-                                          "onSelect": function(newDate){
+  var startDateInstance = M.Datepicker.init(startDateElem, {
+                                          onSelect: function(newDate){
                                             endDateInstance.options.minDate = newDate;
                                           }});
+
   var endDateElem = document.getElementById('student_edate');
-  var endDateInstance = M.Datepicker.init(endDateElem, {"minDate": new Date("<?php echo $projectTuple['sdate']; ?>"),
-                                          "maxDate": new Date("<?php echo $projectTuple['edate']; ?>"),
-                                          "defaultDate": new Date("<?php echo $projectTuple['edate']; ?>"),
-                                          "onSelect": function(newDate){
+  var endDateInstance = M.Datepicker.init(endDateElem, {
+                                          onSelect: function(newDate){
                                             startDateInstance.options.maxDate = newDate;
                                           }});
+  </script>
+  <script>
+  // Set the date pickers minDate, maxDate, and DefaultDate options after 1 second after the page loads.
+  // Since their is a bug in the materialize framework with setting dates in the init function.
+  setTimeout(function(){
+  var x = M.Datepicker.getInstance(document.getElementById('student_sdate'));
+  var y = M.Datepicker.getInstance(document.getElementById('student_edate'));
+  x.options.minDate = jsDateStart;
+  x.setDate(jsDateStart);
+  x.options.defaultDate = jsDateStart;
+  x.options.maxDate = jsDateEnd;
+
+  y.options.minDate = jsDateStart;
+  y.setDate(jsDateEnd);
+  y.options.defaultDate = jsDateEnd;
+  y.options.maxDate = jsDateEnd;
+  }, 1000);
+
   </script>
   <?php if($showToast) { echo '<script type="text/javascript">',
   'M.toast({html: "'.$toastMessage.'"})',

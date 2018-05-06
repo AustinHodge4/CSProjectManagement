@@ -125,6 +125,8 @@ session_start();
                                     unset($_COOKIE['showToast']);
                                     setcookie('showToast', '', time() - 3600, '/');
                                 }
+                                mysqli_stmt_close($stmt);
+                                mysqli_close($link);
                                 header("location: projects.php");
                                 
 

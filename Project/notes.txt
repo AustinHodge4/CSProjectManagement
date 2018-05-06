@@ -18,6 +18,9 @@ Avatars:
 	-Adorable Avatars(http://avatars.adorable.io)
 
 Examples:
+Students no projects:
+	- 940002713
+	- 940002471 Debra Gentry
 Students:
 	- 940300033
 	- 1 Project (Active) with students that are inactive

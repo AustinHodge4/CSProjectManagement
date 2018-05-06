@@ -10,6 +10,7 @@ if(isset($_SESSION['username'])) {
   debug_to_console($isStudent);
 }
 else {
+  mysqli_close($link);
   header("Location: index.php");
 }
 // Showing toast when you login 
@@ -38,20 +39,26 @@ if (mysqli_num_rows($result) > 0) {
 // Get all the projects tuples for student or faculty
 if ($isStudent){
   $studentID = $user['sid'];
-  $sql = "SELECT P.* FROM Project P, Assigned A WHERE P.pid = A.pid AND A.sid = '$studentID'";
+  $sql = "CALL user_projects('$studentID', 'student')";
 } else {
   $facultyID = $user['fid'];
-  $sql = "SELECT * FROM Project WHERE pinv = '$facultyID' OR copinv = '$facultyID'";
+  $sql = "CALL user_projects('$facultyID', 'faculty')";
 }
 $result = mysqli_query($link, $sql);
-if (mysqli_num_rows($result) > 0) {
+if (mysqli_num_rows($result) > 0 ) {
   // output data of each row
   while($row = mysqli_fetch_assoc($result)) {
     $rows[] = $row;
   }
   debug_to_console($rows);
   $numberOfProjects = count($rows);
+
+  // Have to call next result when calling multiple stored procedures one after the other
+  $result->free();
+  $link->next_result();
 }
+
+
 mysqli_close($link);
 ?> 
 <!DOCTYPE html>
