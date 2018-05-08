@@ -4,7 +4,7 @@ require_once 'config.php';
 include 'debug.php';
 
 // Showing toast when you logout
-if (isset($_COOKIE['showToast'])) {
+if (isset($_COOKIE['showToast'])) {https://github.com/OFFLINE-GmbH/Online-FTP-S3
   $showToast = false;
 } else {
   setcookie('showToast', true);
@@ -25,18 +25,17 @@ if (isset($_COOKIE['showToast'])) {
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
 <body>
-  <nav class="light-blue lighten-1" role="navigation">
-    <?php include 'nav.php'; ?>
-  </nav>
+  <?php include 'nav.php'; ?>
+  <main>
   <div class="section no-pad-bot" id="index-banner">
     <div class="container">
       <br><br>
-      <h1 class="header center orange-text">Starter Template</h1>
+      <h1 class="header center orange-text">cst6306 advanced_database</h1>
       <div class="row center">
-        <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
+        <h5 class="header col s12 light">A modern responsive CS Project Management System</h5>
       </div>
       <div class="row center">
-        <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light orange">Get Started</a>
+
       </div>
       <br><br>
 
@@ -52,9 +51,9 @@ if (isset($_COOKIE['showToast'])) {
         <div class="col s12 m4">
           <div class="icon-block">
             <h2 class="center light-blue-text"><i class="material-icons">flash_on</i></h2>
-            <h5 class="center">Speeds up development</h5>
+            <h5 class="center">Speeds up Project development</h5>
 
-            <p class="light">We did most of the heavy lifting for you to provide a default stylings that incorporate our custom components. Additionally, we refined animations and transitions to provide a smoother experience for developers.</p>
+            <p class="light-blue-text">Through ease of use and brilliant organization methods this system speeds up the procees of project development.</p>
           </div>
         </div>
 
@@ -63,7 +62,7 @@ if (isset($_COOKIE['showToast'])) {
             <h2 class="center light-blue-text"><i class="material-icons">group</i></h2>
             <h5 class="center">User Experience Focused</h5>
 
-            <p class="light">By utilizing elements and principles of Material Design, we were able to create a framework that incorporates components and animations that provide more feedback to users. Additionally, a single underlying responsive system across all platforms allow for a more unified user experience.</p>
+            <p class="light-blue-text">This project managment system was designed with the primary focus being user experience. The project managment systems allows both students and falculty to view projects.</p>
           </div>
         </div>
 
@@ -72,15 +71,14 @@ if (isset($_COOKIE['showToast'])) {
             <h2 class="center light-blue-text"><i class="material-icons">settings</i></h2>
             <h5 class="center">Easy to work with</h5>
 
-            <p class="light">We have provided detailed documentation as well as specific code examples to help new users get started. We are also always open to feedback and can answer any questions a user may have about Materialize.</p>
+            <p class="light-blue-text">The project managment was designed to be user friendly and provide ease of use for all ages. </p>
           </div>
         </div>
       </div>
 
     </div>
-    <br><br>
   </div>
-
+    </main>
   <?php include 'footer.php'; ?>
 
 

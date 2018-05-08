@@ -307,19 +307,19 @@ mysqli_close($link);
   </script>
   <script>
   // Set the date pickers minDate, maxDate, and DefaultDate options after 1 second after the page loads.
-  // Since their is a bug in the materialize framework with setting dates in the init function.
-  setTimeout(function(){
-  var x = M.Datepicker.getInstance(document.getElementById('student_sdate'));
-  var y = M.Datepicker.getInstance(document.getElementById('student_edate'));
-  x.options.minDate = jsDateStart;
-  x.setDate(jsDateStart);
-  x.options.defaultDate = jsDateStart;
-  x.options.maxDate = jsDateEnd;
+  // Since there is a bug in the materialize framework with setting dates in the init function.
+  setTimeout(function () {
+    var x = M.Datepicker.getInstance(document.getElementById('student_sdate'));
+    var y = M.Datepicker.getInstance(document.getElementById('student_edate'));
+    x.options.minDate = jsDateStart;
+    x.setDate(jsDateStart);
+    x.options.defaultDate = jsDateStart;
+    x.options.maxDate = jsDateEnd;
 
-  y.options.minDate = jsDateStart;
-  y.setDate(jsDateEnd);
-  y.options.defaultDate = jsDateEnd;
-  y.options.maxDate = jsDateEnd;
+    y.options.minDate = jsDateStart;
+    y.setDate(jsDateEnd);
+    y.options.defaultDate = jsDateEnd;
+    y.options.maxDate = jsDateEnd;
   }, 1000);
 
   </script>

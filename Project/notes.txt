@@ -14,6 +14,7 @@ phpmyadmin: link 	- https://supportindeed.com/phpMyAdmin4/index.php
 
 Integrity Constraints:
 	- Users username must be unique
+	- Students cannot be assigned to more than 4 projects
 Avatars:
 	-Adorable Avatars(http://avatars.adorable.io)
 

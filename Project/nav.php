@@ -18,10 +18,15 @@
         <div class="background">
           <img src="background1.jpg">
         </div>
-      <a href="#user"><img class="circle" src="https://api.adorable.io/avatars/285/<?php echo $userID; ?>.png"></a>
-      <a href="#name"><span class="white-text name"><?php if ($isStudent){ echo $user['sname']; } else { echo $user['fname']; } ?></span></a>
-      <a href="#name"><span class="white-text email"><?php if ($isStudent){ echo $user['level'] .', '. $user['major']; } else { echo $user['department']; } ?></span></a>
-
+      <?php if($isStudent): ?>
+      <a href="userProfile.php?user_profile_id=<?php echo $userID; ?>&user_student_profile=true"><img class="circle" src="https://api.adorable.io/avatars/285/<?php echo $userID; ?>.png"></a>
+      <a href="userProfile.php?user_profile_id=<?php echo $userID; ?>&user_student_profile=true"><span class="white-text name"><?php echo $user['sname']; ?></span></a>
+      <a href="#name"><span class="white-text email"><?php echo $user['level'] .', '. $user['major']; ?></span></a>
+  <?php else: ?>
+  <a href="userProfile.php?user_profile_id=<?php echo $userID; ?>&user_student_profile=false"><img class="circle" src="https://api.adorable.io/avatars/285/<?php echo $userID; ?>.png"></a>
+      <a href="userProfile.php?user_profile_id=<?php echo $userID; ?>&user_student_profile=false"><span class="white-text name"><?php echo $user['fname']; ?></span></a>
+      <a href="#name"><span class="white-text email"><?php echo $user['department']; ?></span></a>
+  <?php endif; ?>
       </div>
     </li>
     <li><a class="waves-effect" href="search.php"><i class="material-icons">search</i>Search</a></li>
